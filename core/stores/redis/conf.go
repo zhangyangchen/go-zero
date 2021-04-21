@@ -17,6 +17,7 @@ type (
 		Host string
 		Type string `json:",default=node,options=node|cluster"`
 		Pass string `json:",optional"`
+		DB   int    `json:",default=0"` // Redis Cluster doesn't support multiple database. There's only one database, i.e. db 0
 	}
 
 	// A RedisKeyConf is a redis config with key.
@@ -28,7 +29,7 @@ type (
 
 // NewRedis returns a Redis.
 func (rc RedisConf) NewRedis() *Redis {
-	return NewRedis(rc.Host, rc.Type, rc.Pass)
+	return NewRedis(rc.Host, rc.Type, rc.DB, rc.Pass)
 }
 
 // Validate validates the RedisConf.
