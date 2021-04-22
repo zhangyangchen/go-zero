@@ -945,7 +945,6 @@ func (s *Redis) Pipelined(fn func(Pipeliner) error) (err error) {
 
 		_, err = conn.Pipelined(fn)
 		return err
-
 	}, acceptable)
 
 	return
@@ -1742,17 +1741,9 @@ func acceptable(err error) bool {
 func getRedis(r *Redis) (RedisNode, error) {
 	switch r.Type {
 	case ClusterType:
-		if r.tls {
-			return getClusterWithTLS(r.Addr, r.Pass, r.tls)
-		} else {
-			return getCluster(r.Addr, r.Pass)
-		}
+		return getCluster(r)
 	case NodeType:
-		if r.tls {
-			return getClientWithTLS(r.Addr, r.Pass, r.tls)
-		} else {
-			return getClient(r.Addr, r.Pass)
-		}
+		return getClient(r)
 	default:
 		return nil, fmt.Errorf("redis type '%s' is not supported", r.Type)
 	}
